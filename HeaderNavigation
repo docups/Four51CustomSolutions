@@ -1,0 +1,62 @@
+angular.module('OrderCloud-HeaderNavigation', []);
+angular.module('OrderCloud-HeaderNavigation')
+    .directive('headernavigation', headernavigation)
+    .controller('HeaderNavigationCtrl', HeaderNavigationCtrl)
+;
+
+function headernavigation() {
+    return {
+        restrict: 'E',
+        template: template
+    };
+
+    function template() {
+        return [
+            '<section class="header-navigation">',
+            '<div class="row">',
+            '<div class="col-xs-12 col-sm-6 pull-right">',
+            '<ul>',
+            '<li>',
+            '<categorymodal>',
+            '</categorymodal>',
+            '<li><span style="color: #2e2e2e;">&nbsp;&bull;&nbsp;</span>',
+            '</li>',
+            '</li>',
+            '<li class="dropdown">',
+            '<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="false">MY ACCOUNT</a>',
+            '<ul class="dropdown-menu">',
+            '<li><a href="admin">USER INFORMATION</a></li>',
+            '<li><a href="addresses">ADDRESSES</a></li>',
+            '<li ng-show="user.Permissions.contains(\'ViewContactUs\')"><a href="contactus">CONTACT US</a></li>',
+            '<li><a href="favoriteorders">FAVORITES</a></li>',
+            '<li ng-show="user.Permissions.contains(\'ViewMessaging\')"><a href="message">MESSAGES</a></li>',
+            '</ul>',
+            '</li>',
+            '<li ng-show="user.Permissions.contains(\'AdvancedReporting\')"><span style="color: #2e2e2e;">&nbsp;&bull;&nbsp;</span></li>',
+            '<li ng-show="user.Permissions.contains(\'AdvancedReporting\')"><a href="reports">REPORTS</a></li>',
+            '<li><span style="color: #2e2e2e;">&nbsp;&bull;&nbsp;</span></li>',
+            '<li><a href="order">ORDERS</a></li>',
+            '<li><span style="color: #2e2e2e;">&nbsp;&bull;&nbsp;</span></li>',
+            '<li><a ng-click="Logout()">LOG OFF</a></li>',
+            '</ul>',
+            '</div>',
+            '</div>',
+            '</section>'
+        ].join('');
+    }
+}
+
+HeaderNavigationCtrl.$inject = ['$scope','User'];
+function HeaderNavigationCtrl($scope, User) {
+
+    $scope.Logout = function(){
+        User.logout();
+        if ($scope.isAnon) {
+            $location.path("/catalog");
+            User.login(function(user) {
+                $scope.user = user;
+            });
+        }
+    };
+
+}
